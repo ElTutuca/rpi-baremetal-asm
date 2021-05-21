@@ -27,7 +27,7 @@ SRCS = $(wildcard *.c)
 ASM_SRCS = $(wildcard *.S)
 OBJS = $(SRCS:.c=.o)
 ASM_OBJS = $(ASM_SRCS:.S=.o)
-CFLAGS = -Wall -O1 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nostartfiles
+CFLAGS = -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nostartfiles
 
 all: clean kernel8.img
 
@@ -44,5 +44,5 @@ kernel8.img: $(ASM_OBJS) $(OBJS)
 clean:
 	rm kernel8.elf kernel8.img *.o >/dev/null 2>/dev/null || true
 
-run:
+run : all
 	qemu-system-aarch64 -M raspi3 -kernel kernel8.img -serial stdio
