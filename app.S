@@ -10,7 +10,11 @@ app:
 	mov x20, x0
 	//---------------- CODE HERE ------------------------------------
 	
-	mov x10, 0xFF0000    // 0xF800 = RED
+	// COLOR MARROOOOOOOOON
+	mov x10, 0
+	add x10, x10, 0x800000
+	add x10, x10, 0xF00
+	add x10, x10, 0x3000
 repintar:
 	mov x2,SCREEN_HEIGH         // Y Size 
 loop1:

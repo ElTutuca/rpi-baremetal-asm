@@ -1,7 +1,0 @@
-{
-    "files.associations": {
-        "mbox.h": "c",
-        "random": "c",
-        "gpio.h": "c"
-    }
-}
