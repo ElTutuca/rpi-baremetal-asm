@@ -56,3 +56,13 @@ cuatro:
     bl      main
     // for failsafe, halt this core too
     b       CoreLoop
+
+.global delay
+delay:
+  cbz w0, _delay_end
+delay_loop:
+  nop
+  subs w0, w0, #1
+  bne delay_loop
+_delay_end:
+  ret
