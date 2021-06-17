@@ -25,6 +25,7 @@
 
 #include "uart.h"
 #include "lfb.h"
+extern unsigned char *lfb;                         /* raw frame buffer address */
 
 void app(unsigned char *);
 

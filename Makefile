@@ -32,14 +32,14 @@ CFLAGS = -Wall -O2 -ffreestanding -fno-stack-protector -nostdinc -nostdlib -nost
 all: clean kernel8.img
 
 %.o: %.S
-	aarch64-elf-gcc $(CFLAGS) -c $< -o $@
+	aarch64-linux-gnu-gcc $(CFLAGS) -c $< -o $@
 
 %.o: %.c
-	aarch64-elf-gcc $(CFLAGS) -c $< -o $@
-#	aarch64-elf-gcc $(CFLAGS) -S $< -o asm/$@.s
+	aarch64-linux-gnu-gcc $(CFLAGS) -c $< -o $@
+#	aarch64-linux-gnu-gcc $(CFLAGS) -S $< -o asm/$@.s
 kernel8.img: $(ASM_OBJS) $(OBJS)
-	aarch64-elf-ld -nostdlib -nostartfiles $(ASM_OBJS) $(OBJS) -T link.ld -o kernel8.elf
-	aarch64-elf-objcopy -O binary kernel8.elf kernel8.img
+	aarch64-linux-gnu-ld -nostdlib $(ASM_OBJS) $(OBJS) -T link.ld -o kernel8.elf
+	aarch64-linux-gnu-objcopy -O binary kernel8.elf kernel8.img
 
 clean:
 	rm kernel8.elf kernel8.img *.o >/dev/null 2>/dev/null || true

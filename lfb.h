@@ -25,7 +25,6 @@
 
 void lfb_init();
 void lfb_showpicture();
-unsigned char *lfb;                         /* raw frame buffer address */
 
 #define SCREEN_WIDTH 		640
 #define SCREEN_HEIGH 		480

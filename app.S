@@ -7,10 +7,11 @@
 .global app
 app:
 	// X0 contiene la direccion base del framebuffer
-	
+	mov x20, x0
 	//---------------- CODE HERE ------------------------------------
 	
-	mov x10, 0x0FF000    // 0xF800 = RED
+	mov x10, 0xFF0000    // 0xF800 = RED
+repintar:
 	mov x2,SCREEN_HEIGH         // Y Size 
 loop1:
 	mov x1,SCREEN_WIDTH         // X Size
@@ -27,6 +28,23 @@ loop0:
 	// Infinite Loop 
 	adr x0, SALUDO
 	bl uart_puts
+wait_char:
+	bl uart_received
+	cbnz w0, wait_char
+	bl uart_getc_noblock
+
+	cmp w0, 'a'
+	b.ne siguiente
+
+	mov x10, 0x00FF00    // 0xF800 = Green
+	mov x0, x20
+	b repintar
+siguiente:
+	mov x10, 0x0000FF    // 0xF800 = Green
+	mov x0, x20
+	b repintar
+
+
 InfLoop: 
 	b InfLoop
 

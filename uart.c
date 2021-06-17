@@ -100,6 +100,21 @@ char uart_getc() {
     /* convert carrige return to newline */
     return r=='\r'?'\n':r;
 }
+/**
+ * Receive a character
+ */
+char uart_received() {
+    return *UART0_FR&0x10;
+}
+
+/**
+ * Receive a character
+ */
+char uart_getc_noblock() {
+    char r;
+    r=(char)(*UART0_DR);
+    return r=='\r'?'\n':r;
+}
 
 /**
  * Display a string

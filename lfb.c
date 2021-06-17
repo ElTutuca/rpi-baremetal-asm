@@ -26,6 +26,7 @@
 #include "uart.h"
 #include "mbox.h"
 #include "lfb.h"
+unsigned char *lfb;                         /* raw frame buffer address */
 
 unsigned int width, height, pitch, isrgb;   /* dimensions and channel order */
 
