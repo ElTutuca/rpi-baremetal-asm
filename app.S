@@ -38,7 +38,7 @@ animation:
 	movz x2, 100			// X2: W
 	movz x3, 100			// X3: H
 	mov x4, 0x800000		// X4: Color
-	bl draw_triangle_left
+	bl draw_trian_left
 
 	// ***** DER *****
 	movz x0, 320			// X0: X
@@ -47,7 +47,7 @@ animation:
 	movz x3, 100			// X3: H
 	mov x4, 0x800000		// X4: Color
 	add x4, x4, 0xFF0000
-	bl draw_triangle
+	bl draw_trian
 
 	cbz x21, _animation_non_animated
 
@@ -69,9 +69,11 @@ animation:
 	add x4, x4, 0x66
 	bl draw_rect
 
+	cmp x22, #10
+	b.eq _animation_door
 	sub x22, x22, #1
 
-	b _animation_final
+	b _animation_door
 
 _animation_non_animated:
 
@@ -83,7 +85,7 @@ _animation_non_animated:
 	mov x4, 0x0
 	bl draw_rect
 
-_animation_final:
+_animation_door:
 	// *************** PUERTA ***************
 	movz x0, 350			// X0: X
 	movz x1, 300			// X1: Y
@@ -94,30 +96,22 @@ _animation_final:
 	add x4, x4, 0x633
 	bl draw_rect
 
-	mov x0, 0xFFFFF			// Cantidad delay
-	bl delay
+	cbnz x21, _animation_final
+
+	bl uart_puts
+wait_char:
+	bl uart_received
+	cbnz w0, wait_char
+	bl uart_getc_noblock
+
+	mov x21, 1
+
+_animation_final:
+
+	mov x0, 0xFFFF			// Cantidad delay
+	bl wait_msec
+
 	b animation
-
-	//---------------------------------------------------------------
-	// Infinite Loop 
-	// 	adr x0, SALUDO
-	// 	bl uart_puts
-	// wait_char:
-	// 	bl uart_received
-	// 	cbnz w0, wait_char
-	// 	bl uart_getc_noblock
-	//
-	// 	cmp w0, 'a'
-	// 	b.ne siguiente
-	//
-	// 	mov x10, 0x00FF00    // 0xF800 = Green
-	// 	mov x0, x20
-	// 	b repintar
-	// siguiente:
-	// 	mov x10, 0x0000FF    // 0xF800 = Green
-	// 	mov x0, x20
-	// 	b repintar
-
 
 InfLoop: 
 	b InfLoop
@@ -160,9 +154,9 @@ _draw_rect_loop_col:
 
 	ret
 
-draw_triangle: // x0: X, x1: Y, x2: B, x3: H, x4: Color
+draw_trian: // x0: X, x1: Y, x2: B, x3: H, x4: Color
 		   
-_draw_triangle_loop_fila: 
+_draw_trian_loop_fila: 
 	mov	   x5, SCREEN_WIDTH
 	mul    x5, x1, x5
 	add    x5, x5, x0
@@ -171,19 +165,19 @@ _draw_triangle_loop_fila:
 	add	   x2,x2,  #1
 	mov    x6, x2
 
-_draw_triangle_loop_col:
+_draw_trian_loop_col:
 		str x4, [x5]
 		add x5, x5, #4
 		sub x6, x6, #1
-		cbnz x6, _draw_triangle_loop_col
+		cbnz x6, _draw_trian_loop_col
 	add x1, x1, #1
 	sub x3, x3, #1
-	cbnz x3, _draw_triangle_loop_fila
+	cbnz x3, _draw_trian_loop_fila
 	ret
 
-draw_triangle_left: // x0: X, x1: Y, x2: B, x3: H, x4: Color
+draw_trian_left: // x0: X, x1: Y, x2: B, x3: H, x4: Color
 		   
-_draw_triangle_left_loop_fila: 
+_draw_trian_left_loop_fila: 
 	mov	   x5, SCREEN_WIDTH
 	mul    x5, x1, x5
 	sub	   x0, x0, #1
@@ -193,12 +187,12 @@ _draw_triangle_left_loop_fila:
 	add	   x2,x2,  #1
 	mov    x6, x2
 
-_draw_triangle_left_loop_col:
+_draw_trian_left_loop_col:
 		str x4, [x5]
 		add x5, x5, #4
 		sub x6, x6, #1
-		cbnz x6, _draw_triangle_left_loop_col
+		cbnz x6, _draw_trian_left_loop_col
 	add x1, x1, #1
 	sub x3, x3, #1
-	cbnz x3, _draw_triangle_left_loop_fila
+	cbnz x3, _draw_trian_left_loop_fila
 	ret
